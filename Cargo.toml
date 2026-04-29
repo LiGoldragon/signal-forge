@@ -1,0 +1,17 @@
+[package]
+name         = "signal-forge"
+version      = "0.1.0"
+edition      = "2024"
+rust-version = "1.85"
+license      = "MIT OR Apache-2.0"
+repository   = "https://github.com/LiGoldragon/signal-forge"
+description  = "signal-forge — layered protocol crate atop signal. Carries the criome ↔ forge wire (Build, Deploy, store-entry operations) using signal's Frame, handshake, and auth. Skeleton-as-design."
+
+[dependencies]
+signal    = { git = "https://github.com/LiGoldragon/signal", branch = "main" }
+rkyv      = { version = "0.8", default-features = false, features = ["std", "bytecheck", "little_endian", "pointer_width_32", "unaligned"] }
+thiserror = "2"
+
+[lints.rust]
+unused = "allow"
+dead_code = "allow"
