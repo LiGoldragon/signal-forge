@@ -32,7 +32,8 @@ typed envelope by which it dispatches effect-bearing work to
 forge.
 
 - **`Build`** — carries the records criome read from sema
-  (Opus + transitive OpusDeps) plus a **criome-signed
+  (the target Graph + transitive `DependsOn` graphs +
+  `Contains` nodes + edges) plus a **criome-signed
   capability token** authorising forge to deposit into a
   target arca store. forge links prism + assembles workdir +
   invokes nix (crane + fenix) + bundles the closure into
