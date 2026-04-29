@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "signal_forge",
+  "project_id": "f558cf80-877d-457b-8f81-34d51fbe0a9b"
+}

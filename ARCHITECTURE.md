@@ -24,18 +24,33 @@ criome forwards to forge for execution.
 
 ## What's here
 
-Per-verb typed payloads on the criome → forge leg:
+Per-verb typed payloads on the criome → forge leg. criome
+itself runs nothing (per
+[criome/ARCHITECTURE.md §10](https://github.com/LiGoldragon/criome/blob/main/ARCHITECTURE.md#10--project-wide-rules)
+"criome communicates; it never runs"); these verbs are the
+typed envelope by which it dispatches effect-bearing work to
+forge.
 
-- **`Build`** — records → `CompiledBinary` outcome. forge runs
-  prism + workdir-assembly + nix + bundle internally; replies
-  with `{ store_entry_hash, narhash, wall_ms }`.
-- **`Deploy`** — nixos-rebuild on a target host.
+- **`Build`** — carries the records criome read from sema
+  (Opus + transitive OpusDeps) plus a **criome-signed
+  capability token** authorising forge to deposit into a
+  target arca store. forge links prism + assembles workdir +
+  invokes nix (crane + fenix) + bundles the closure into
+  arca's `_staging/` + signal-arca-deposits to arca-daemon —
+  all internally. Reply is the `CompiledBinary` outcome
+  payload `{ arca_hash, narhash, wall_ms }`. criome asserts
+  the `CompiledBinary` record to sema using `arca_hash` as
+  canonical identity.
+- **`Deploy`** — `nixos-rebuild` against a target host
+  (system flake + host identity + activation mode). forge
+  spawns the rebuild; replies with `{ generation, wall_ms }`.
 - **store-entry operations** — get / put / materialize / delete
-  against arca, gated by capability tokens.
+  against arca, gated by capability tokens. Bulk bytes never
+  cross criome — these are control-plane verbs only.
 
 Reply payloads:
 
-- `BuildOk { store_entry_hash, narhash, wall_ms }`
+- `BuildOk { arca_hash, narhash, wall_ms }`
 - `DeployOk { generation, wall_ms }`
 - `Failed { code, message }`
 
@@ -57,13 +72,27 @@ Does not own:
   [prism](https://github.com/LiGoldragon/prism), linked by
   forge.
 
-## Why a separate crate
+## Why layered atop signal (not parallel to it)
 
-**Audience-scoped compile-time isolation.** Front-end clients
-depend only on `signal`. Builder-internal field churn here
-(adding `nix_target_platform`, refining outcomes, evolving
-capability-token shapes) recompiles only criome and forge, not
-the wider workspace.
+**Audience-scoped compile-time isolation.** The criome ↔ forge
+leg has a narrow audience — criome (sender), forge (receiver),
+lojix-cli (transitional sender of deploy verbs). Front-end
+clients (nexus daemon, GUI editor, mentci-lib, agents) never
+need these verbs and must not depend on them. Splitting the
+builder protocol into its own crate means builder-internal
+field churn (adding `nix_target_platform`, refining outcomes,
+evolving capability-token shapes, growing the store-entry
+verb family) recompiles only criome + forge, not the wider
+workspace.
+
+**Layered, not parallel.** signal-forge re-uses signal's
+`Frame` envelope, handshake, auth, and record-kind types — it
+contributes only the per-verb typed payloads on this one leg.
+A parallel protocol would duplicate envelope/handshake/auth
+machinery and force every implementer to ship two stacks.
+Layering keeps the wire-protocol invariants (rkyv encoding,
+content-addressing of attached records, capability-token
+verification) in one place.
 
 ## Code map
 
