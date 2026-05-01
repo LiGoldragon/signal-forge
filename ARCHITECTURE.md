@@ -1,6 +1,6 @@
 # ARCHITECTURE — signal-forge
 
-Layered protocol crate atop [signal](https://github.com/LiGoldragon/signal).
+Layered protocol crate atop signal.
 Carries the criome ↔ forge wire — effect-bearing verbs that
 criome forwards to forge for execution.
 
@@ -26,7 +26,7 @@ criome forwards to forge for execution.
 
 Per-verb typed payloads on the criome → forge leg. criome
 itself runs nothing (per
-[criome/ARCHITECTURE.md §10](https://github.com/LiGoldragon/criome/blob/main/ARCHITECTURE.md#10--project-wide-rules)
+criome/ARCHITECTURE.md §10
 "criome communicates; it never runs"); these verbs are the
 typed envelope by which it dispatches effect-bearing work to
 forge.
@@ -65,12 +65,12 @@ Owns:
 Does not own:
 
 - The Frame envelope, handshake, or auth primitives — those
-  live in [signal](https://github.com/LiGoldragon/signal) and
+  live in signal and
   this crate re-uses them.
 - The front-end-visible verbs (`Assert`, `Query`,
   `BuildRequest`, `Subscribe`, ...) — those live in signal.
 - The prism emission templates — those live in
-  [prism](https://github.com/LiGoldragon/prism), linked by
+  prism, linked by
   forge.
 
 ## Why layered atop signal (not parallel to it)
