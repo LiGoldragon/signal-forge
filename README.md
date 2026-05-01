@@ -12,7 +12,7 @@ The audience is narrow: criome (sender), forge
 not on this crate — builder-internal field churn doesn't
 recompile front-ends.
 
-See [`ARCHITECTURE.md`](ARCHITECTURE.md). Project-wide context:
+See `ARCHITECTURE.md`. Project-wide context:
 criome/ARCHITECTURE.md.
 
 ## Status
