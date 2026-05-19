@@ -11,6 +11,32 @@ execution — typed payloads only; criome itself runs nothing.*
 `SignalVerb` six-root spine, and exchange-identifier mechanics, and
 adds the per-verb typed payloads on the narrow criome ↔ forge wire.
 
+## MUST IMPLEMENT — signal architecture migration
+
+This contract is migrating to contract-local verbs per
+`primary/reports/designer/238-signal-architecture-redirection-contract-local-verbs.md`
+and `primary/reports/designer/239-signal-architecture-migration-plan.md`.
+
+The current shape is two `Mutate`-tagged variants (`Build`, `Deploy`)
+plus a deferred `StoreEntry*` family. Drop the `Mutate` prefix —
+`Build` and `Deploy` are already verb-form contract-local roots; they
+read correctly as "criome is asking forge to build this" / "criome is
+asking forge to deploy this." Payloads stay as the typed nouns
+(`BuildRequest` becomes `Build`'s payload, perhaps renamed to a
+plain noun like `Target`). The `StoreEntry*` family that's still
+TBD likely splits to `signal-arca` per the existing note in §2;
+when it does, use contract-local verbs there too (`Get`, `Put`,
+`Materialize`, `Delete` — all already verb-form). The dependency on
+`signal-core` shifts to `signal-frame`; `Frame` envelope and
+handshake stay the same (frame mechanics only).
+
+References: `primary/reports/designer/238-signal-architecture-redirection-contract-local-verbs.md`,
+`primary/reports/designer/239-signal-architecture-migration-plan.md`.
+
+**Note to remover:** when the refactor lands, remove this section and
+add a `## Migration history — contract-local verbs (2026-05-XX)`
+paragraph noting the shape change.
+
 Front-end clients (nexus, GUI editor, agents, mentci-lib) depend on
 `signal` for the sema-ecosystem vocabulary; they do **not** depend
 on `signal-forge`. Builder-internal churn in this crate recompiles
