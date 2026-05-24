@@ -1,0 +1,30 @@
+{}
+
+[
+  (Build [Derivation])
+  (Deploy [Activation])
+  (Query [BuildStatus])
+]
+
+[]
+
+[]
+
+{
+  Build [(Derivation Derivation)]
+  Deploy [(Activation Activation)]
+  Query [(BuildStatus BuildStatus)]
+  Derivation (Text)
+  Activation (Text)
+  BuildStatus (Text)
+  Text (String)
+  Identifier (u64)
+  Name (String)
+  Path (String)
+  Status [Concept Active Retired]
+}
+
+[
+  (Version 0 1)
+  (Status Concept)
+]
