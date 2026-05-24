@@ -255,6 +255,23 @@ tests/
                      (lands with the bodies).
 ```
 
+## Pending schema-engine upgrade
+
+**Status:** scheduled for migration to schema-language-based contract per `reports/designer/326-v13-spirit-complete-schema-vision.md` + `reports/designer/324-migration-mvp-spirit-handover-re-specification.md`.
+
+**Target:** this contract's hand-written `signal_channel!` invocation converts to a single `forge/forge.schema` file shared with the `forge` daemon's repository. The brilliant macro library (`primary-ezqx.1`) reads the schema + emits this crate's wire types + ShortHeader projection + dispatcher binding + VersionProjection impls.
+
+**Sequence:** per `reports/designer/316` forge family direction. Spirit is the MVP pilot landing first via `primary-ezqx.1`; this contract's schema cutover follows after pilot succeeds and the forge family direction settles.
+
+**Per-component concerns:** Per `/316` forge family direction; schema cutover follows persona triad. The contract surface here is still skeleton-as-design (variant bodies `todo!()`); cutover bundles with first-real-implementation.
+
+**References:**
+- `reports/designer/326-v13-spirit-complete-schema-vision.md` — uniform header form + schema-language design
+- `reports/designer/324-migration-mvp-spirit-handover-re-specification.md` — migration MVP + handover state
+- `reports/designer/322-spirit-mvp-positional-schema-worked-example.md` — Spirit MVP worked example
+- `reports/operator/174-schema-import-header-design-critique-2026-05-24.md` — header/body/feature separation + lowering rules
+- `reports/designer/316-…` — forge family direction
+
 ## See also
 
 - `~/primary/skills/contract-repo.md` §"The layered pattern" — the
