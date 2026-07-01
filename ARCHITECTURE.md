@@ -98,8 +98,7 @@ flowchart TB
 > **Scope (today vs eventually).** This contract sits on today's
 > stack — `signal-frame` wire kernel, rkyv archives. The
 > eventually-self-hosting stack is Sema-on-Sema; this layered crate
-> is a realization step. See `~/primary/ESSENCE.md` §"Today and
-> eventually".
+> is a realization step. See `~/primary/ARCHITECTURE.md` §"Workspace vision and intent".
 
 ## 1 · Channel boundary
 
@@ -279,7 +278,7 @@ tests/
 - `~/primary/skills/contract-repo.md` §"Public contracts use
   contract-local operation verbs" — the three-layer framing.
 - `~/primary/skills/component-triad.md` §"Verbs come in three layers".
-- `~/primary/ESSENCE.md` §"Perfect specificity at boundaries" — the
+- `~/primary/ARCHITECTURE.md` §"Workspace vision and intent" — the
   principle this contract repo encodes across processes.
 - `/git/github.com/LiGoldragon/signal-frame/ARCHITECTURE.md` — the
   wire kernel this crate layers atop.
