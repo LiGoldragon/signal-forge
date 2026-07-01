@@ -226,10 +226,9 @@ lands.
 ## 7 · Why layered atop signal-frame (not parallel to it)
 
 **Audience-scoped compile-time isolation.** The criome ↔ forge leg
-has a narrow audience — criome (sender), forge (receiver),
-lojix-cli (transitional sender of deploy verbs). Front-end clients
-(nexus daemon, GUI editor, mentci-lib, agents) never need these
-verbs and must not depend on them. Splitting the builder protocol
+has a narrow audience — criome (sender) and forge (receiver).
+Front-end clients (nexus daemon, GUI editor, mentci-lib, agents)
+never need these verbs and must not depend on them. Splitting the builder protocol
 into its own crate means builder-internal field churn (adding
 `nix_target_platform`, refining outcomes, evolving capability-token
 shapes, growing the store-entry verb family) recompiles only

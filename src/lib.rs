@@ -16,8 +16,8 @@
 //!   validating the front-end request.
 //! - **forge** (receiver) — links prism, runs nix, bundles into
 //!   arca; replies with outcome payloads.
-//! - **lojix-cli** (transitional sender) — emits deploy verbs
-//!   directly during the migration phases.
+//! Lojix deploy orchestration uses the signal-lojix and
+//! meta-signal-lojix contracts rather than this builder protocol.
 //!
 //! Front-end clients (nexus daemon, GUI editor, mentci-lib,
 //! agents) depend only on [`signal`], not on this crate.

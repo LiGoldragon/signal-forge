@@ -5,12 +5,10 @@ Carries the **criome ↔ forge wire** — effect-bearing verbs
 (Build, Deploy, store-entry operations) — using signal's
 Frame envelope, handshake, and auth.
 
-The audience is narrow: criome (sender), forge
-(receiver), lojix-cli
-(transitional sender of deploy verbs). Front-end clients
-(nexus daemon, GUI editor, mentci-lib) depend only on `signal`,
-not on this crate — builder-internal field churn doesn't
-recompile front-ends.
+The audience is narrow: criome (sender) and forge
+(receiver). Front-end clients (nexus daemon, GUI editor,
+mentci-lib) depend only on `signal`, not on this crate —
+builder-internal field churn doesn't recompile front-ends.
 
 See `ARCHITECTURE.md`. Project-wide context:
 criome/ARCHITECTURE.md.
