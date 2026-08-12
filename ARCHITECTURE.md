@@ -124,7 +124,7 @@ The channel is declared via one `signal_channel!` invocation in
 `src/lib.rs` per `signal-frame/ARCHITECTURE.md`. The macro emits
 the typed `ForgeRequest` / `ForgeReply` enums, the frame alias
 (`ExchangeFrame` — this channel has no streams in the v1 design),
-and the NOTA codec impls.
+and the DOTOS codec impls.
 
 | Operation | Payload | What happens | Authority direction | Expected Sema class |
 |---|---|---|---|---|
@@ -179,7 +179,7 @@ lands.
   `ProtocolVersion`/handshake. This crate does **not** redefine
   those types.
 - Every `ForgeRequest` variant is a contract-local verb in verb form;
-  the `signal_channel!` macro emits the NOTA codec keyed on the
+  the `signal_channel!` macro emits the DOTOS codec keyed on the
   payload's head.
 - Closed enums only. **No `Unknown` variant.** Lifecycle uncertainty
   is encoded as a positive closed variant (e.g., `Failed::reason`
@@ -189,10 +189,10 @@ lands.
   arca↔forge↔target out-of-band.
 - Naming follows `~/primary/skills/naming.md`: full English words;
   no crate-name prefix on types.
-- rkyv on the wire; NOTA derives on every typed record so the same
+- rkyv on the wire; DOTOS derives on every typed record so the same
   type IS the binary record AND IS the text record.
 - Round-trip tests per record kind in `tests/`: rkyv archive
-  round-trip AND NOTA text round-trip, both witnessed.
+  round-trip AND DOTOS text round-trip, both witnessed.
 - Sema classification projections live in the forge daemon
   (Component Commands impl `ToSemaOperation`), not in this contract
   crate.
@@ -204,7 +204,7 @@ lands.
 - The criome → forge contract-local operation payloads on this layer.
 - Capability-token shape for the criome → forge leg (criome-signed
   authorisation to deposit into a target arca store).
-- Round-trip witnesses for every record kind (rkyv + NOTA).
+- Round-trip witnesses for every record kind (rkyv + DOTOS).
 
 **Not owned (re-used from `signal-frame`, `signal-sema`, and `signal`):**
 
@@ -249,7 +249,7 @@ src/
 └── lib.rs   — signal_channel! declaration + typed payloads.
               Currently todo!() skeleton-as-design.
 tests/
-└── round_trip.rs  — per-variant rkyv + NOTA round-trips
+└── round_trip.rs  — per-variant rkyv + DOTOS round-trips
                      (lands with the bodies).
 ```
 

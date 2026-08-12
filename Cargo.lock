@@ -122,18 +122,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "nota-next"
+name = "dotos"
 version = "0.5.0"
-source = "git+https://github.com/LiGoldragon/nota-next.git?branch=main#7426a6a7d60d6e37ac40df4ecc98717af58129f8"
+source = "git+https://github.com/LiGoldragon/dotos.git?branch=main#7426a6a7d60d6e37ac40df4ecc98717af58129f8"
 dependencies = [
- "nota-next-derive",
+ "dotos-derive",
  "rkyv",
 ]
 
 [[package]]
-name = "nota-next-derive"
+name = "dotos-derive"
 version = "0.3.0"
-source = "git+https://github.com/LiGoldragon/nota-next.git?branch=main#7426a6a7d60d6e37ac40df4ecc98717af58129f8"
+source = "git+https://github.com/LiGoldragon/dotos.git?branch=main#7426a6a7d60d6e37ac40df4ecc98717af58129f8"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -249,7 +249,7 @@ name = "signal"
 version = "0.1.0"
 source = "git+https://github.com/LiGoldragon/signal?branch=main#7cdb0fe8a43988d6b08cd2446aab04c6af2d5f0e"
 dependencies = [
- "nota-next",
+ "dotos",
  "rkyv",
  "signal-derive",
  "signal-sema",
@@ -280,7 +280,7 @@ name = "signal-sema"
 version = "0.2.0"
 source = "git+https://github.com/LiGoldragon/signal-sema.git?branch=main#bdd7fe369952cb51e4476f201a3419ae5b35d444"
 dependencies = [
- "nota-next",
+ "dotos",
  "rkyv",
  "thiserror",
 ]
