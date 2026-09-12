@@ -16,6 +16,7 @@
 //!   validating the front-end request.
 //! - **forge** (receiver) — links prism, runs nix, bundles into
 //!   arca; replies with outcome payloads.
+//!
 //! Lojix deploy orchestration uses the signal-lojix and
 //! meta-signal-lojix contracts rather than this builder protocol.
 //!
