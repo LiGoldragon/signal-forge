@@ -43,10 +43,10 @@ a `CommandExecutor` that knows forge's tables and the nix/crane/fenix
 toolchain. Lowering from contract operation to commands happens in
 the daemon.
 
-**Layer 3 — Sema classification (signal-sema).** Each Component
-Command projects to a payloadless `SemaOperation` class label via
-`ToSemaOperation`, so cross-component observers can filter by class.
-Forge does not import payload-bearing Sema variants.
+**Layer 3 — Memory classification (signal-memory).** Each Component
+Command projects to a payloadless `MemoryOperation` class label via
+`ToMemoryOperation`, so cross-component observers can filter by class.
+Forge does not import payload-bearing Memory variants.
 
 **Frame layer.** The dependency on `signal-core` shifts to
 `signal-frame`; `Frame` envelope and handshake stay the same (frame
@@ -63,7 +63,7 @@ add a `## Migration history — three-layer model (2026-05-XX)`
 paragraph noting the shape change.
 
 Front-end clients (nexus, GUI editor, agents, mentci-lib) depend on
-`signal` for the sema-ecosystem vocabulary; they do **not** depend
+`signal` for the memory-ecosystem vocabulary; they do **not** depend
 on `signal-forge`. Builder-internal churn in this crate recompiles
 only criome + forge, not the wider workspace. This is the canonical
 example of `~/primary/skills/contract-repo.md` §"The layered
@@ -72,7 +72,7 @@ pattern".
 ```mermaid
 flowchart TB
     frame["signal-frame<br/>(wire kernel — Frame, exchange ids, handshake)"]
-    base["signal<br/>(sema-ecosystem records vocabulary)"]
+    base["signal<br/>(memory-ecosystem records vocabulary)"]
     forge["signal-forge<br/>(criome ↔ forge effect verbs)"]
 
     front["front-end clients<br/>(nexus, GUI, agents)"]
@@ -97,7 +97,7 @@ flowchart TB
 
 > **Scope (today vs eventually).** This contract sits on today's
 > stack — `signal-frame` wire kernel, rkyv archives. The
-> eventually-self-hosting stack is Sema-on-Sema; this layered crate
+> eventually-self-hosting stack is Memory-on-Memory; this layered crate
 > is a realization step. See `~/primary/ARCHITECTURE.md` §"Workspace vision and intent".
 
 ## 1 · Channel boundary
@@ -126,15 +126,15 @@ the typed `ForgeRequest` / `ForgeReply` enums, the frame alias
 (`ExchangeFrame` — this channel has no streams in the v1 design),
 and the DOTOS codec impls.
 
-| Operation | Payload | What happens | Authority direction | Expected Sema class |
+| Operation | Payload | What happens | Authority direction | Expected Memory class |
 |---|---|---|---|---|
-| `Build` | `BuildRequest` | Criome orders forge to build a target. Payload carries the records criome read from sema (target `Graph` + transitive `DependsOn` + `Contains` nodes + edges) plus a criome-signed capability token authorising forge to deposit into the target arca store. Forge links prism, assembles the workdir, invokes nix (crane + fenix), bundles the closure into arca's staging area, and signals arca-daemon. | top-down (criome → forge) — authority order. Criome holds *possibly-mutated* state until forge confirms. | `Mutate` |
+| `Build` | `BuildRequest` | Criome orders forge to build a target. Payload carries the records criome read from memory (target `Graph` + transitive `DependsOn` + `Contains` nodes + edges) plus a criome-signed capability token authorising forge to deposit into the target arca store. Forge links prism, assembles the workdir, invokes nix (crane + fenix), bundles the closure into arca's staging area, and signals arca-daemon. | top-down (criome → forge) — authority order. Criome holds *possibly-mutated* state until forge confirms. | `Mutate` |
 | `Deploy` | `DeployRequest` | Criome orders forge to perform a `nixos-rebuild` against a target host (system flake + host identity + activation mode). | top-down — authority order. | `Mutate` |
-| `StoreEntry*` family | (TBD) | Get / put / materialize / delete against arca, gated by capability tokens. **Likely migrates to `signal-arca` when that contract crate lands.** Sema-class assignments deferred to that design pass. | TBD | TBD |
+| `StoreEntry*` family | (TBD) | Get / put / materialize / delete against arca, gated by capability tokens. **Likely migrates to `signal-arca` when that contract crate lands.** Memory-class assignments deferred to that design pass. | TBD | TBD |
 
 `Build` and `Deploy` are authority-order operations — under the
 three-layer model the *wire verb* is the contract-local action
-(`Build` / `Deploy`); the *Sema class* `Mutate` is the daemon-side
+(`Build` / `Deploy`); the *Memory class* `Mutate` is the daemon-side
 classification used for observation only. Criome is the authority
 root for forge on this leg; forge obeys and confirms.
 
@@ -144,7 +144,7 @@ Reply payloads:
 
 - `BuildOk { arca_hash, narhash, wall_ms }` — forge confirms the
   build completed; criome then asserts the `CompiledBinary` record
-  to sema using `arca_hash` as canonical identity.
+  to memory using `arca_hash` as canonical identity.
 - `DeployOk { generation, wall_ms }` — forge confirms activation.
 - `Failed { code, message }` — typed failure for either; closed
   reason vocabulary, never an untyped error string.
@@ -193,8 +193,8 @@ lands.
   type IS the binary record AND IS the text record.
 - Round-trip tests per record kind in `tests/`: rkyv archive
   round-trip AND DOTOS text round-trip, both witnessed.
-- Sema classification projections live in the forge daemon
-  (Component Commands impl `ToSemaOperation`), not in this contract
+- Memory classification projections live in the forge daemon
+  (Component Commands impl `ToMemoryOperation`), not in this contract
   crate.
 
 ## 6 · Owned / not owned
@@ -206,13 +206,13 @@ lands.
   authorisation to deposit into a target arca store).
 - Round-trip witnesses for every record kind (rkyv + DOTOS).
 
-**Not owned (re-used from `signal-frame`, `signal-sema`, and `signal`):**
+**Not owned (re-used from `signal-frame`, `signal-memory`, and `signal`):**
 
 - `Frame` envelope, handshake, `ProtocolVersion` — `signal-frame`.
-- The Sema classification labels (`Assert`, `Mutate`, `Retract`,
-  `Match`, `Subscribe`, `Validate`) — `signal-sema`. Used as
+- The Memory classification labels (`Assert`, `Mutate`, `Retract`,
+  `Match`, `Subscribe`, `Validate`) — `signal-memory`. Used as
   observation-only projection targets, not on the wire.
-- The sema-ecosystem record vocabulary (`Node`, `Edge`, `Graph`,
+- The memory-ecosystem record vocabulary (`Node`, `Edge`, `Graph`,
   `Records`, etc.) — `signal`. `BuildRequest` carries instances of
   those types but does not redefine them.
 
@@ -281,11 +281,11 @@ tests/
   principle this contract repo encodes across processes.
 - `/git/github.com/LiGoldragon/signal-frame/ARCHITECTURE.md` — the
   wire kernel this crate layers atop.
-- `/git/github.com/LiGoldragon/signal-sema/ARCHITECTURE.md` — the
-  payloadless Sema classification vocabulary used at the observation
+- `/git/github.com/LiGoldragon/signal-memory/ARCHITECTURE.md` — the
+  payloadless Memory classification vocabulary used at the observation
   layer.
 - `/git/github.com/LiGoldragon/signal/ARCHITECTURE.md` — the
-  sema-ecosystem records vocabulary `BuildRequest` carries.
+  memory-ecosystem records vocabulary `BuildRequest` carries.
 - `/git/github.com/LiGoldragon/criome/ARCHITECTURE.md` — the
   sender side of this leg.
 - `/git/github.com/LiGoldragon/forge/ARCHITECTURE.md` — the
